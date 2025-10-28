@@ -96,64 +96,84 @@ export function Chat() {
       setMessages((prev) => [...prev, savedUserMsg as Message]);
     }
 
-    const assistantMsg: Partial<Message> = {
-      conversation_id: currentConversation.id,
-      role: 'assistant',
-      content: generateMockResponse(userMessage, language),
-      is_voice: false,
-    };
+    try {
+      const conversationMessages = messages.map(msg => ({
+        role: msg.role as 'user' | 'assistant' | 'system',
+        content: msg.content,
+      }));
 
-    const { data: savedAssistantMsg } = await supabase
-      .from('messages')
-      .insert(assistantMsg)
-      .select()
-      .single();
+      conversationMessages.push({
+        role: 'user',
+        content: userMessage,
+      });
 
-    if (savedAssistantMsg) {
-      setMessages((prev) => [...prev, savedAssistantMsg as Message]);
+      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
+      const { data: { session } } = await supabase.auth.getSession();
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session?.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: conversationMessages,
+          language,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to get response from AI');
+      }
+
+      const assistantMsg: Partial<Message> = {
+        conversation_id: currentConversation.id,
+        role: 'assistant',
+        content: result.message,
+        is_voice: false,
+      };
+
+      const { data: savedAssistantMsg } = await supabase
+        .from('messages')
+        .insert(assistantMsg)
+        .select()
+        .single();
+
+      if (savedAssistantMsg) {
+        setMessages((prev) => [...prev, savedAssistantMsg as Message]);
+      }
+
+      await supabase
+        .from('conversations')
+        .update({
+          updated_at: new Date().toISOString(),
+          title: userMessage.slice(0, 50)
+        })
+        .eq('id', currentConversation.id);
+    } catch (error) {
+      console.error('Error sending message:', error);
+
+      const errorMsg: Partial<Message> = {
+        conversation_id: currentConversation.id,
+        role: 'assistant',
+        content: 'I apologize, but I encountered an error. Please try again.',
+        is_voice: false,
+      };
+
+      const { data: savedErrorMsg } = await supabase
+        .from('messages')
+        .insert(errorMsg)
+        .select()
+        .single();
+
+      if (savedErrorMsg) {
+        setMessages((prev) => [...prev, savedErrorMsg as Message]);
+      }
+    } finally {
+      setLoading(false);
     }
-
-    await supabase
-      .from('conversations')
-      .update({
-        updated_at: new Date().toISOString(),
-        title: userMessage.slice(0, 50)
-      })
-      .eq('id', currentConversation.id);
-
-    setLoading(false);
-  };
-
-  const generateMockResponse = (userMessage: string, lang: string): string => {
-    const responses = {
-      en: {
-        greeting: "Hello! I'm AIMAI, your Trans-Nzoia County assistant. How can I help you today?",
-        business: "To register a business in Trans-Nzoia County, visit the County Business Registration Office at Kitale Town Hall with your ID, KRA PIN, and business name certificate. The fee is KES 2,000.",
-        default: "Thank you for your question. As a demo version, I'm providing simulated responses. In the full version, I would connect to OpenAI to provide accurate, helpful answers about Trans-Nzoia County services.",
-      },
-      sw: {
-        greeting: "Habari! Mimi ni AIMAI, msaidizi wako wa Kaunti ya Trans-Nzoia. Naweza kukusaidiaje leo?",
-        business: "Kusajili biashara katika Kaunti ya Trans-Nzoia, tembelea Ofisi ya Usajili wa Biashara ya Kaunti katika Kitale Town Hall na kitambulisho chako, KRA PIN, na hati ya jina la biashara. Ada ni KES 2,000.",
-        default: "Asante kwa swali lako. Kama toleo la onyesho, ninatoa majibu ya simulizi. Katika toleo kamili, ningaunganisha na OpenAI kutoa majibu sahihi na ya kusaidia kuhusu huduma za Kaunti ya Trans-Nzoia.",
-      },
-      luy: {
-        greeting: "Muraa olayi! Ndi AIMAI, omusaali wakho wa Trans-Nzoia County. Ndakhona okhukhutsaalisia okhukhuluhi lero?",
-        business: "Okhuyandikha bikonoomu khuli Trans-Nzoia County, echa khu Ofisi ya Okhuyandikha Ebikonoomu ya Kaundi khuli Kitale Town Hall nende echitambuliso chakho, KRA PIN, nende echitabo cha lisina lya bikonoomu. Endere yene KES 2,000.",
-        default: "Namusikha khumuchaale kwakho. Khulia demo version, ndikhola okhukhola obulaali bwa simulizi. Khu version yamusyene, ndekhola okhukamanyikha na OpenAI okhukhola majibu ke amalaala nende okhutsaalisia khubukali ebikholi ebya Trans-Nzoia County.",
-      },
-    };
-
-    const langResponses = responses[lang as keyof typeof responses] || responses.en;
-
-    if (userMessage.toLowerCase().includes('hello') || userMessage.toLowerCase().includes('habari') || userMessage.toLowerCase().includes('muraa')) {
-      return langResponses.greeting;
-    }
-
-    if (userMessage.toLowerCase().includes('business') || userMessage.toLowerCase().includes('biashara') || userMessage.toLowerCase().includes('bikonoomu')) {
-      return langResponses.business;
-    }
-
-    return langResponses.default;
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
