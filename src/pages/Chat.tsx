@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Send, Mic, MicOff, MessageSquare } from 'lucide-react';
+import { Send, Mic, MicOff, MessageSquare, Plus, LogOut } from 'lucide-react';
 import { useTranslation } from '../hooks/useTranslation';
 import { useAuth } from '../hooks/useAuth';
 import { supabase } from '../lib/supabase';
@@ -10,7 +10,7 @@ import { ThemeToggle } from '../components/common/ThemeToggle';
 
 export function Chat() {
   const { t, language, setLanguage } = useTranslation();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentConversation, setCurrentConversation] = useState<Conversation | null>(null);
@@ -183,6 +183,38 @@ export function Chat() {
     }
   };
 
+  const createNewChat = async () => {
+    if (!user) return;
+
+    if (currentConversation) {
+      await supabase
+        .from('conversations')
+        .update({ status: 'archived' })
+        .eq('id', currentConversation.id);
+    }
+
+    const { data: newConv } = await supabase
+      .from('conversations')
+      .insert({
+        user_id: user.id,
+        title: 'New Chat',
+        language,
+        channel: 'web',
+      })
+      .select()
+      .single();
+
+    if (newConv) {
+      setCurrentConversation(newConv as Conversation);
+      setMessages([]);
+    }
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    window.location.href = '/';
+  };
+
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
       <div className="flex-1 flex flex-col">
@@ -195,17 +227,36 @@ export function Chat() {
               </h1>
             </div>
             <div className="flex items-center gap-3">
+              <button
+                onClick={createNewChat}
+                className="p-2 rounded-lg bg-teal-600 hover:bg-teal-700 text-white transition-colors"
+                title="New Chat"
+              >
+                <Plus size={20} />
+              </button>
               <LanguageSelector current={language} onChange={setLanguage} />
               <ThemeToggle />
+              <button
+                onClick={handleSignOut}
+                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-400 transition-colors"
+                title="Sign Out"
+              >
+                <LogOut size={20} />
+              </button>
             </div>
           </div>
         </header>
 
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
-          {messages.length === 0 && (
+          {messages.length === 0 && !loading && (
             <div className="text-center text-gray-500 dark:text-gray-400 py-12">
               <MessageSquare className="w-16 h-16 mx-auto mb-4 opacity-50" />
-              <p className="text-lg">{t('chat.welcome')}</p>
+              <p className="text-lg font-medium mb-2">{t('chat.welcome')}</p>
+              <p className="text-sm max-w-md mx-auto">
+                {language === 'en' && 'Ask me anything about Trans-Nzoia County services, procedures, or general questions.'}
+                {language === 'sw' && 'Niulize chochote kuhusu huduma za Kaunti ya Trans-Nzoia, taratibu, au maswali ya jumla.'}
+                {language === 'luy' && 'Nichaale ekindu chosi khubukali ebikholi ebya Trans-Nzoia County, emirembe, okhandi emiswaali eminandi.'}
+              </p>
             </div>
           )}
 
@@ -215,15 +266,15 @@ export function Chat() {
               className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-2xl rounded-lg px-4 py-3 ${
+                className={`max-w-2xl rounded-lg px-4 py-3 shadow-sm ${
                   message.role === 'user'
                     ? 'bg-teal-600 text-white'
                     : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700'
                 }`}
               >
-                <p className="whitespace-pre-wrap">{message.content}</p>
-                <span className="text-xs opacity-70 mt-1 block">
-                  {new Date(message.created_at).toLocaleTimeString()}
+                <p className="whitespace-pre-wrap break-words">{message.content}</p>
+                <span className="text-xs opacity-70 mt-2 block">
+                  {new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
               </div>
             </div>
@@ -256,13 +307,14 @@ export function Chat() {
             >
               {isRecording ? <MicOff size={20} /> : <Mic size={20} />}
             </button>
-            <input
-              type="text"
+            <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyPress}
               placeholder={t('chat.typeMessage')}
-              className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              rows={1}
+              className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none max-h-32 overflow-y-auto"
+              style={{ minHeight: '44px' }}
             />
             <Button onClick={sendMessage} disabled={!input.trim() || loading}>
               <Send size={20} />
