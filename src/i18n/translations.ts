@@ -1,0 +1,272 @@
+import { Language } from '../types';
+
+export const translations = {
+  en: {
+    common: {
+      yes: 'Yes',
+      no: 'No',
+      cancel: 'Cancel',
+      save: 'Save',
+      delete: 'Delete',
+      edit: 'Edit',
+      loading: 'Loading...',
+      search: 'Search',
+      filter: 'Filter',
+    },
+    navigation: {
+      home: 'Home',
+      chat: 'Chat',
+      history: 'History',
+      settings: 'Settings',
+      profile: 'Profile',
+      about: 'About',
+      help: 'Help',
+      privacy: 'Privacy',
+      terms: 'Terms',
+    },
+    landing: {
+      hero: {
+        title: 'AIMAI - Your Trans-Nzoia County AI Assistant',
+        subtitle: 'Get help in English, Swahili, or Luhya',
+        cta: 'Start Chatting',
+        learnMore: 'Learn More',
+      },
+      features: {
+        title: 'Features',
+        multilingual: {
+          title: 'Multilingual Support',
+          description: 'Communicate in English, Swahili, or Luhya',
+        },
+        voice: {
+          title: 'Voice Input & Output',
+          description: 'Speak your questions and hear responses',
+        },
+        whatsapp: {
+          title: 'WhatsApp Integration',
+          description: 'Chat with AIMAI on WhatsApp',
+        },
+      },
+    },
+    chat: {
+      newChat: 'New Chat',
+      typeMessage: 'Type a message...',
+      send: 'Send',
+      listening: 'Listening...',
+      thinking: 'Thinking...',
+      regenerate: 'Regenerate',
+      copy: 'Copy',
+      playVoice: 'Play Voice',
+      stopVoice: 'Stop Voice',
+      selectLanguage: 'Select Language',
+      welcome: 'Hello! I\'m AIMAI, your Trans-Nzoia County assistant. How can I help you today?',
+    },
+    settings: {
+      title: 'Settings',
+      language: 'Language Settings',
+      defaultLanguage: 'Default Language',
+      autoDetect: 'Auto-detect language',
+      voice: 'Voice Settings',
+      voiceInput: 'Enable voice input',
+      voiceOutput: 'Enable voice output',
+      voiceSpeed: 'Voice speed',
+      theme: 'Theme',
+      lightMode: 'Light',
+      darkMode: 'Dark',
+      privacy: 'Privacy Settings',
+      saveHistory: 'Save conversation history',
+      clearHistory: 'Clear all conversations',
+      deleteAccount: 'Delete account',
+    },
+    errors: {
+      networkError: 'Connection lost. Trying to reconnect...',
+      voicePermission: 'Please enable microphone access in your browser settings.',
+      voiceNotRecognized: 'Sorry, I couldn\'t recognize that voice. Could you please repeat or type?',
+      messageFailed: 'Failed to send message. Please try again.',
+      sessionExpired: 'Your session has expired. Please log in again.',
+      unknownError: 'An unexpected error occurred. Please try again.',
+    },
+  },
+  sw: {
+    common: {
+      yes: 'Ndio',
+      no: 'Hapana',
+      cancel: 'Ghairi',
+      save: 'Hifadhi',
+      delete: 'Futa',
+      edit: 'Hariri',
+      loading: 'Inapakia...',
+      search: 'Tafuta',
+      filter: 'Chuja',
+    },
+    navigation: {
+      home: 'Nyumbani',
+      chat: 'Mazungumzo',
+      history: 'Historia',
+      settings: 'Mipangilio',
+      profile: 'Wasifu',
+      about: 'Kuhusu',
+      help: 'Msaada',
+      privacy: 'Faragha',
+      terms: 'Masharti',
+    },
+    landing: {
+      hero: {
+        title: 'AIMAI - Msaidizi wako wa AI wa Kaunti ya Trans-Nzoia',
+        subtitle: 'Pata msaada kwa Kiingereza, Kiswahili, au Kiluhya',
+        cta: 'Anza Mazungumzo',
+        learnMore: 'Jifunze Zaidi',
+      },
+      features: {
+        title: 'Vipengele',
+        multilingual: {
+          title: 'Usaidizi wa Lugha Nyingi',
+          description: 'Wasiliana kwa Kiingereza, Kiswahili, au Kiluhya',
+        },
+        voice: {
+          title: 'Sauti ya Kuingia na Kutoka',
+          description: 'Sema maswali yako na sikia majibu',
+        },
+        whatsapp: {
+          title: 'Muunganisho wa WhatsApp',
+          description: 'Zungumza na AIMAI kwenye WhatsApp',
+        },
+      },
+    },
+    chat: {
+      newChat: 'Mazungumzo Mapya',
+      typeMessage: 'Andika ujumbe...',
+      send: 'Tuma',
+      listening: 'Sikiliza...',
+      thinking: 'Ninafikiria...',
+      regenerate: 'Zaa Tena',
+      copy: 'Nakili',
+      playVoice: 'Cheza Sauti',
+      stopVoice: 'Simamisha Sauti',
+      selectLanguage: 'Chagua Lugha',
+      welcome: 'Habari! Mimi ni AIMAI, msaidizi wako wa Kaunti ya Trans-Nzoia. Naweza kukusaidiaje leo?',
+    },
+    settings: {
+      title: 'Mipangilio',
+      language: 'Mipangilio ya Lugha',
+      defaultLanguage: 'Lugha ya Kawaida',
+      autoDetect: 'Gundua lugha kiotomatiki',
+      voice: 'Mipangilio ya Sauti',
+      voiceInput: 'Wezesha sauti ya kuingia',
+      voiceOutput: 'Wezesha sauti ya kutoka',
+      voiceSpeed: 'Kasi ya sauti',
+      theme: 'Mandhari',
+      lightMode: 'Mwanga',
+      darkMode: 'Giza',
+      privacy: 'Mipangilio ya Faragha',
+      saveHistory: 'Hifadhi historia ya mazungumzo',
+      clearHistory: 'Futa mazungumzo yote',
+      deleteAccount: 'Futa akaunti',
+    },
+    errors: {
+      networkError: 'Muunganisho umepotea. Inajaribu kuunganisha tena...',
+      voicePermission: 'Tafadhali ruhusu ufikiaji wa kipaza sauti katika mipangilio ya kivinjari chako.',
+      voiceNotRecognized: 'Samahani, sikuweza kutambua sauti hiyo. Tafadhali rudia au andika?',
+      messageFailed: 'Imeshindwa kutuma ujumbe. Tafadhali jaribu tena.',
+      sessionExpired: 'Kipindi chako kimeisha. Tafadhali ingia tena.',
+      unknownError: 'Kosa lisilotarajiwa limetokea. Tafadhali jaribu tena.',
+    },
+  },
+  luy: {
+    common: {
+      yes: 'Ee',
+      no: 'Tsia',
+      cancel: 'Raaya',
+      save: 'Terekesia',
+      delete: 'Futa',
+      edit: 'Andikha kaakhe',
+      loading: 'Khulia khukanga...',
+      search: 'Ronga',
+      filter: 'Salula',
+    },
+    navigation: {
+      home: 'Khaya',
+      chat: 'Emisango',
+      history: 'Ebikhalakhala',
+      settings: 'Ebikhwi',
+      profile: 'Ebikhuluho',
+      about: 'Khubukali',
+      help: 'Enyakho',
+      privacy: 'Obususu',
+      terms: 'Amalako',
+    },
+    landing: {
+      hero: {
+        title: 'AIMAI - Omusaali wakho wa AI wa Trans-Nzoia County',
+        subtitle: 'Khola enyakho khu English, Swahili, okhandi Luhya',
+        cta: 'Chaka Khuloma',
+        learnMore: 'Khumanye Ekindu Ekiranyi',
+      },
+      features: {
+        title: 'Ebikhooli',
+        multilingual: {
+          title: 'Okhutsaalisia Khu Enyeso Esinji',
+          description: 'Lomaloma khu English, Swahili, okhandi Luhya',
+        },
+        voice: {
+          title: 'Litsembo Lya Khwinjila Ne Lya Khubukha',
+          description: 'Loma emiswaale chiakho nende okhuli majibu',
+        },
+        whatsapp: {
+          title: 'Okhukamanania Khu WhatsApp',
+          description: 'Loma nende AIMAI khu WhatsApp',
+        },
+      },
+    },
+    chat: {
+      newChat: 'Omusango Omusya',
+      typeMessage: 'Andikha omusango...',
+      send: 'Suma',
+      listening: 'Khuulitsanga...',
+      thinking: 'Khukhabanga...',
+      regenerate: 'Andikha Kaakhe',
+      copy: 'Koppa',
+      playVoice: 'Imbilia Litsembo',
+      stopVoice: 'Khomekha Litsembo',
+      selectLanguage: 'Salula Olunyala',
+      welcome: 'Muraa olayi! Ndi AIMAI, omusaali wakho wa Trans-Nzoia County. Ndakhona okhukhutsaalisia okhukhuluhi lero?',
+    },
+    settings: {
+      title: 'Ebikhwi',
+      language: 'Ebikhwi Ebya Olunyala',
+      defaultLanguage: 'Olunyala Olusyene',
+      autoDetect: 'Manya olunyala khukhichende',
+      voice: 'Ebikhwi Ebya Litsembo',
+      voiceInput: 'Wekhesia litsembo lya khwinjila',
+      voiceOutput: 'Wekhesia litsembo lya khubukha',
+      voiceSpeed: 'Obulayi bwa litsembo',
+      theme: 'Obulongi',
+      lightMode: 'Obulangasi',
+      darkMode: 'Omururu',
+      privacy: 'Ebikhwi Ebya Obususu',
+      saveHistory: 'Terekesia ebikhalakhala ebya emisango',
+      clearHistory: 'Futa emisango chiosi',
+      deleteAccount: 'Futa akaunti',
+    },
+    errors: {
+      networkError: 'Okhukamanania khubile. Ndakhola okhukamanania kaakhe...',
+      voicePermission: 'Wekhesia enyako ya okhukhola litsembo khu ebikhwi ebya kivinjari chiakho.',
+      voiceNotRecognized: 'Musaachire, sendakhona khulola litsembo lya. Echikhe nende okhandi andikhe?',
+      messageFailed: 'Khubile okhusuma omusango. Echikhe nende khurong\'a kaakhe.',
+      sessionExpired: 'Omukhakha kwakho kumachile. Echikhe nende khwinjila kaakhe.',
+      unknownError: 'Ekhosi eritaa khwarajiwe ryebukhile. Echikhe nende khurong\'a kaakhe.',
+    },
+  },
+};
+
+export type TranslationKey = keyof typeof translations.en;
+
+export function getTranslation(language: Language, key: string): string {
+  const keys = key.split('.');
+  let value: any = translations[language];
+
+  for (const k of keys) {
+    value = value?.[k];
+  }
+
+  return value || key;
+}
